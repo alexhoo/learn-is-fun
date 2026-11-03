@@ -1,0 +1,19 @@
+[
+  { "id": "w_cat", "en": "cat", "es": "gato", "emoji": "🐱", "category": "animals", "level": 1 },
+  { "id": "w_dog", "en": "dog", "es": "perro", "emoji": "🐶", "category": "animals", "level": 1 },
+  { "id": "w_bird", "en": "bird", "es": "pájaro", "emoji": "🐦", "category": "animals", "level": 1 },
+  { "id": "w_fish", "en": "fish", "es": "pez", "emoji": "🐟", "category": "animals", "level": 1 },
+  { "id": "w_cow", "en": "cow", "es": "vaca", "emoji": "🐮", "category": "animals", "level": 1 },
+  { "id": "w_pig", "en": "pig", "es": "cerdo", "emoji": "🐷", "category": "animals", "level": 1 },
+  { "id": "w_horse", "en": "horse", "es": "caballo", "emoji": "🐴", "category": "animals", "level": 2 },
+  { "id": "w_duck", "en": "duck", "es": "pato", "emoji": "🦆", "category": "animals", "level": 2 },
+  { "id": "w_sheep", "en": "sheep", "es": "oveja", "emoji": "🐑", "category": "animals", "level": 2 },
+  { "id": "w_rabbit", "en": "rabbit", "es": "conejo", "emoji": "🐰", "category": "animals", "level": 2 },
+
+  { "id": "w_red", "en": "red", "es": "rojo", "emoji": "🔴", "category": "colors", "level": 1 },
+  { "id": "w_blue", "en": "blue", "es": "azul", "emoji": "🔵", "category": "colors", "level": 1 },
+  { "id": "w_green", "en": "green", "es": "verde", "emoji": "🟢", "category": "colors", "level": 1 },
+  { "id": "w_yellow", "en": "yellow", "es": "amarillo", "emoji": "🟡", "category": "colors", "level": 1 },
+  { "id": "w_orange", "en": "orange", "es": "naranja", "emoji": "🟠", "category": "colors", "level": 2 },
+  { "id": "w_purple", "en": "purple", "es": "morado", "emoji": "🟣", "category": "colors", "level": 2 }
+]

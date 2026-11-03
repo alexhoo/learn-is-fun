@@ -1,0 +1,7 @@
+[
+  { "id": "first-lesson", "title": { "en": "First steps", "es": "Primeros pasos" }, "emoji": "👣", "rule": { "kind": "lessonsCompleted", "gte": 1 } },
+  { "id": "five-lessons", "title": { "en": "Super learner", "es": "Gran aprendiz" }, "emoji": "🚀", "rule": { "kind": "lessonsCompleted", "gte": 5 } },
+  { "id": "perfect-lesson", "title": { "en": "Perfect!", "es": "¡Perfecto!" }, "emoji": "💎", "rule": { "kind": "perfectLesson" } },
+  { "id": "streak-3", "title": { "en": "3 days in a row", "es": "3 días seguidos" }, "emoji": "🔥", "rule": { "kind": "streak", "gte": 3 } },
+  { "id": "words-10", "title": { "en": "10 words", "es": "10 palabras" }, "emoji": "📚", "rule": { "kind": "wordsMastered", "gte": 10 } }
+]

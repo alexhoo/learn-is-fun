@@ -1,0 +1,70 @@
+{
+  "id": "english-kids-a0",
+  "title": "English Kids · Pre-A1",
+  "units": [
+    {
+      "id": "animals",
+      "title": { "en": "Farm friends", "es": "Amigos de la granja" },
+      "world": "farm",
+      "emoji": "🐮",
+      "lessons": [
+        {
+          "id": "animals-01",
+          "title": { "en": "Pets", "es": "Mascotas" },
+          "exercises": [
+            { "id": "animals-01-e1", "type": "pick-image", "difficulty": 1, "skill": "listening", "answer": "w_cat", "distractors": ["w_dog", "w_bird"] },
+            { "id": "animals-01-e2", "type": "drag-to-image", "difficulty": 1, "skill": "vocab", "word": "w_dog", "targets": ["w_cat", "w_dog", "w_fish"] },
+            { "id": "animals-01-e3", "type": "pick-image", "difficulty": 1, "skill": "listening", "answer": "w_fish", "distractors": ["w_bird", "w_cat"] },
+            { "id": "animals-01-e4", "type": "match", "difficulty": 1, "skill": "vocab", "pairs": ["w_cat", "w_dog", "w_bird", "w_fish"] },
+            { "id": "animals-01-e5", "type": "scramble", "difficulty": 1, "skill": "spelling", "word": "w_cat" },
+            { "id": "animals-01-e6", "type": "order-words", "difficulty": 1, "skill": "grammar", "sentence": { "en": "I see a dog", "es": "Veo un perro" } }
+          ]
+        },
+        {
+          "id": "animals-02",
+          "title": { "en": "On the farm", "es": "En la granja" },
+          "exercises": [
+            { "id": "animals-02-e1", "type": "pick-image", "difficulty": 1, "skill": "listening", "answer": "w_cow", "distractors": ["w_pig", "w_horse"] },
+            { "id": "animals-02-e2", "type": "drag-to-image", "difficulty": 1, "skill": "vocab", "word": "w_pig", "targets": ["w_cow", "w_pig", "w_duck"] },
+            { "id": "animals-02-e3", "type": "match", "difficulty": 2, "skill": "vocab", "pairs": ["w_cow", "w_pig", "w_horse", "w_duck"] },
+            { "id": "animals-02-e4", "type": "scramble", "difficulty": 2, "skill": "spelling", "word": "w_duck" },
+            { "id": "animals-02-e5", "type": "pick-image", "difficulty": 2, "skill": "listening", "answer": "w_sheep", "distractors": ["w_rabbit", "w_cow", "w_horse"] },
+            { "id": "animals-02-e6", "type": "order-words", "difficulty": 2, "skill": "grammar", "sentence": { "en": "The cow is big", "es": "La vaca es grande" }, "extraTokens": ["small"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "colors",
+      "title": { "en": "Rainbow", "es": "Arcoíris" },
+      "world": "rainbow",
+      "emoji": "🌈",
+      "lessons": [
+        {
+          "id": "colors-01",
+          "title": { "en": "Colors", "es": "Colores" },
+          "exercises": [
+            { "id": "colors-01-e1", "type": "pick-image", "difficulty": 1, "skill": "listening", "answer": "w_red", "distractors": ["w_blue", "w_green"] },
+            { "id": "colors-01-e2", "type": "drag-to-image", "difficulty": 1, "skill": "vocab", "word": "w_blue", "targets": ["w_red", "w_blue", "w_yellow"] },
+            { "id": "colors-01-e3", "type": "match", "difficulty": 1, "skill": "vocab", "pairs": ["w_red", "w_blue", "w_green", "w_yellow"] },
+            { "id": "colors-01-e4", "type": "scramble", "difficulty": 1, "skill": "spelling", "word": "w_red" },
+            { "id": "colors-01-e5", "type": "pick-image", "difficulty": 1, "skill": "listening", "answer": "w_yellow", "distractors": ["w_green", "w_red"] },
+            { "id": "colors-01-e6", "type": "order-words", "difficulty": 1, "skill": "grammar", "sentence": { "en": "The bird is blue", "es": "El pájaro es azul" } }
+          ]
+        },
+        {
+          "id": "colors-02",
+          "title": { "en": "More colors", "es": "Más colores" },
+          "exercises": [
+            { "id": "colors-02-e1", "type": "pick-image", "difficulty": 2, "skill": "listening", "answer": "w_orange", "distractors": ["w_red", "w_yellow"] },
+            { "id": "colors-02-e2", "type": "drag-to-image", "difficulty": 2, "skill": "vocab", "word": "w_purple", "targets": ["w_blue", "w_purple", "w_red", "w_green"] },
+            { "id": "colors-02-e3", "type": "match", "difficulty": 2, "skill": "vocab", "pairs": ["w_orange", "w_purple", "w_green", "w_blue"] },
+            { "id": "colors-02-e4", "type": "scramble", "difficulty": 2, "skill": "spelling", "word": "w_green" },
+            { "id": "colors-02-e5", "type": "scramble", "difficulty": 3, "skill": "spelling", "word": "w_purple", "extraLetters": ["x"] },
+            { "id": "colors-02-e6", "type": "order-words", "difficulty": 2, "skill": "grammar", "sentence": { "en": "I like green", "es": "Me gusta el verde" }, "extraTokens": ["red"] }
+          ]
+        }
+      ]
+    }
+  ]
+}
