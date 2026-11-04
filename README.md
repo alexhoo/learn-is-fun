@@ -41,6 +41,7 @@ src/
 - **Palabras**: `src/content/words.json`.
 - **Lecciones**: `src/content/course.json`. Los ejercicios referencian palabras por id.
   `npm test` valida que no haya referencias rotas.
+- **Lecciones de gramática**: llevan `stage` (G1…A1) y pasan reglas extra de vocabulario. La guía completa para crear niveles está en `docs/curriculum/README.md`.
 - **Subir dificultad**: más distractores, `extraTokens` / `extraLetters`, frases más largas, `difficulty` 1-5.
 
 ## Añadir un tipo de ejercicio
