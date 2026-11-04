@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { allLessons, course, exerciseWordIds, validateCourse, words } from '../content';
+import { allLessons, course, exerciseWordIds, validateCourse, validateStageLessons, words } from '../content';
 import { evaluate } from '../domain/evaluate';
-import type { FillBlankExercise } from '../domain/types';
+import type { Course, Exercise, FillBlankExercise, GrammarWord, Lesson, Word } from '../domain/types';
+import type { Stage } from '../domain/stages';
 import {
   addDays,
   daysBetween,
@@ -272,5 +273,105 @@ describe('fill-blank', () => {
     for (const patch of bad) {
       assert.ok(errorsFor(patch).some((e) => e.includes('fb1')), JSON.stringify(patch));
     }
+  });
+});
+
+describe('lecciones de gramática (stage)', () => {
+  const grammar: GrammarWord[] = [
+    { text: 'i', stage: 'G1' },
+    { text: 'see', stage: 'G1' },
+    { text: 'a', stage: 'G1' },
+    { text: 'the', stage: 'G2' },
+  ];
+  const zebra: Word = { id: 'w_zebra', en: 'zebra', es: 'cebra', emoji: '🦓', category: 'animals', level: 1 };
+  const vocab = { ...words, w_zebra: zebra };
+
+  const filler = (n: number): Exercise[] =>
+    Array.from({ length: n }, (_, i) => ({
+      id: `filler-${i}`,
+      type: 'pick-image' as const,
+      difficulty: 1 as const,
+      skill: 'listening' as const,
+      answer: 'w_cat',
+      distractors: ['w_dog'],
+    }));
+  const order = (en: string): Exercise => ({
+    id: `order-${en}`,
+    type: 'order-words',
+    difficulty: 1,
+    skill: 'grammar',
+    sentence: { en, es: 'x' },
+  });
+  const lesson = (id: string, stage: Stage | undefined, exercises: Exercise[]): Lesson => ({
+    id,
+    title: { en: id, es: id },
+    exercises,
+    ...(stage ? { stage } : {}),
+  });
+  /** Curso real con lecciones extra al final de la última unidad. */
+  const withLessons = (...extra: Lesson[]): Course => {
+    const copy = structuredClone(course);
+    copy.units[copy.units.length - 1].lessons.push(...extra);
+    return copy;
+  };
+  const check = (...extra: Lesson[]) => validateStageLessons(withLessons(...extra), vocab, grammar);
+
+  it('stage desconocido da error con el id de la lección', () => {
+    const errors = check(lesson('x1', 'G9' as Stage, [...filler(4), order('I see a cat')]));
+    assert.ok(errors.some((e) => e.includes('x1')));
+  });
+
+  it('exige entre 5 y 8 ejercicios', () => {
+    assert.ok(check(lesson('x1', 'G1', filler(4))).some((e) => e.includes('x1')));
+    assert.ok(check(lesson('x1', 'G1', filler(9))).some((e) => e.includes('x1')));
+    assert.deepEqual(check(lesson('x1', 'G1', filler(5))), []);
+    assert.deepEqual(check(lesson('x1', 'G1', filler(8))), []);
+  });
+
+  it('una palabra desconocida en una frase da error con el token', () => {
+    const errors = check(lesson('x1', 'G1', [...filler(4), order('I see a unicorn')]));
+    assert.ok(errors.some((e) => e.includes('unicorn')));
+  });
+
+  it('ignora puntuación y mayúsculas, y acepta plurales regulares', () => {
+    assert.deepEqual(check(lesson('x1', 'G1', [...filler(3), order('I see a cat.'), order('i SEE a Cat')])), []);
+    assert.deepEqual(check(lesson('x1', 'G1', [...filler(4), order('I see cats')])), []);
+  });
+
+  it('las palabras de gramática no pueden ser de una etapa posterior', () => {
+    const exs = [...filler(4), order('The cat')];
+    assert.ok(check(lesson('x1', 'G1', exs)).some((e) => e.includes('the')));
+    assert.deepEqual(check(lesson('x1', 'G2', exs)), []);
+  });
+
+  it('una palabra enseñada en la misma lección vale; en una lección posterior, no', () => {
+    const teach: Exercise = { id: 'teach', type: 'pick-image', difficulty: 1, skill: 'listening', answer: 'w_zebra', distractors: ['w_cat'] };
+    const same = lesson('x1', 'G1', [...filler(3), teach, order('I see a zebra')]);
+    assert.deepEqual(check(same), []);
+    const early = lesson('x1', 'G1', [...filler(4), order('I see a zebra')]);
+    const later = lesson('x2', 'G1', [...filler(4), { ...teach, id: 'teach2' }]);
+    assert.ok(check(early, later).some((e) => e.includes('zebra')));
+  });
+
+  it('fill-blank sustituye el hueco por la respuesta antes de validar', () => {
+    const fb = (answer: string): Exercise => ({
+      id: 'fb',
+      type: 'fill-blank',
+      difficulty: 1,
+      skill: 'grammar',
+      sentence: { en: 'I see ___ cat', es: 'x' },
+      answer,
+      options: [answer, 'b'],
+    });
+    assert.deepEqual(check(lesson('x1', 'G1', [...filler(4), fb('a')])), []);
+    assert.ok(check(lesson('x1', 'G1', [...filler(4), fb('zzz')])).some((e) => e.includes('zzz')));
+  });
+
+  it('las lecciones sin stage están exentas', () => {
+    assert.deepEqual(check(lesson('x1', undefined, [order('I see a unicorn')])), []);
+  });
+
+  it('el curso real sigue siendo íntegro', () => {
+    assert.deepEqual(validateCourse(), []);
   });
 });

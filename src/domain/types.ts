@@ -1,5 +1,10 @@
+import type { Stage } from './stages';
+
 // Modelo de dominio. Todo el contenido (palabras, lecciones, ejercicios) son datos:
 // los ejercicios referencian palabras por id y nunca incrustan texto de vocabulario.
+
+/** Palabra funcional o básica que no es un sustantivo ilustrable (artículos, verbos, adjetivos…). */
+export type GrammarWord = { text: string; stage: Stage };
 
 export type Level = 1 | 2 | 3 | 4 | 5;
 
@@ -88,6 +93,8 @@ export type Answer = string | string[];
 export type Lesson = {
   id: string;
   title: { en: string; es: string };
+  /** Etapa de gramática. Solo las lecciones con `stage` pasan las reglas de vocabulario de la escalera. */
+  stage?: Stage;
   exercises: Exercise[];
 };
 
