@@ -218,6 +218,8 @@ export function isLessonUnlocked(progress: Progress, lessonId: string): boolean 
   const lessons = allLessons(course);
   const index = lessons.findIndex((l) => l.id === lessonId);
   if (index <= 0) return index === 0;
+  // Una lección ya jugada nunca vuelve a bloquearse, aunque se inserten lecciones antes que ella.
+  if ((progress.lessons[lessonId]?.stars ?? 0) >= 1) return true;
   return (progress.lessons[lessons[index - 1].id]?.stars ?? 0) >= 1;
 }
 

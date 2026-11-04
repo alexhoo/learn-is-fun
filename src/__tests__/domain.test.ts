@@ -223,6 +223,14 @@ describe('progreso', () => {
     assert.equal(isLessonUnlocked(p, lessons[2].id), false);
   });
 
+  it('una lección ya completada sigue desbloqueada aunque se inserten lecciones antes', () => {
+    const lessons = allLessons();
+    // Progreso de antes: la lección 4 tiene estrellas, pero la 3 (insertada después) no.
+    const p = reduceProgress(emptyProgress(), lessonEvent('2026-11-03', [result()], lessons[3].id));
+    assert.equal(isLessonUnlocked(p, lessons[2].id), false);
+    assert.equal(isLessonUnlocked(p, lessons[3].id), true);
+  });
+
   it('utilidades de fechas', () => {
     assert.equal(daysBetween('2026-02-28', '2026-03-01'), 1);
     assert.equal(addDays('2026-12-31', 1), '2027-01-01');
