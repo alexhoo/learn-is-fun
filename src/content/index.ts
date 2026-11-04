@@ -52,6 +52,7 @@ export function exerciseWordIds(exercise: Exercise): string[] {
     case 'match':
       return [...exercise.pairs];
     case 'order-words':
+    case 'fill-blank':
       return [];
   }
 }
@@ -94,6 +95,15 @@ export function validateCourse(
           case 'scramble':
             check(ex.id, ex.word);
             break;
+          case 'fill-blank': {
+            const blanks = ex.sentence.en.split('___').length - 1;
+            if (blanks !== 1) errors.push(`${ex.id}: la frase debe tener exactamente un hueco (___)`);
+            const options = ex.options.map((o) => o.trim().toLowerCase());
+            if (!options.includes(ex.answer.trim().toLowerCase())) errors.push(`${ex.id}: la respuesta no está entre las opciones`);
+            if (options.length < 2 || options.length > 4) errors.push(`${ex.id}: se necesitan entre 2 y 4 opciones`);
+            if (new Set(options).size !== options.length) errors.push(`${ex.id}: opciones duplicadas`);
+            break;
+          }
           case 'order-words':
             if (ex.sentence.en.trim().split(/\s+/).length < 2) errors.push(`${ex.id}: la frase es demasiado corta`);
             break;

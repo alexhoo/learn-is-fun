@@ -15,6 +15,8 @@ function correctAnswer(ex: Exercise): Answer {
       return ex.word;
     case 'order-words':
       return ex.sentence.en.split(' ');
+    case 'fill-blank':
+      return ex.answer;
     case 'scramble':
       return getWord(ex.word).en.split('');
     case 'match':

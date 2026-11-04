@@ -60,12 +60,21 @@ export type ScrambleExercise = ExerciseBase & {
   extraLetters?: string[];
 };
 
+/** Se elige la palabra que completa el hueco (`___`) de una frase. */
+export type FillBlankExercise = ExerciseBase & {
+  type: 'fill-blank';
+  sentence: { en: string; es: string }; // `en` lleva `___` exactamente una vez
+  answer: string;
+  options: string[]; // texto, no ids de palabra; incluye `answer`
+};
+
 export type Exercise =
   | PickImageExercise
   | DragToImageExercise
   | OrderWordsExercise
   | MatchExercise
-  | ScrambleExercise;
+  | ScrambleExercise
+  | FillBlankExercise;
 
 export type ExerciseType = Exercise['type'];
 

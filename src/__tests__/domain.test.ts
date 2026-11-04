@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { allLessons, course, validateCourse, words } from '../content';
+import { allLessons, course, exerciseWordIds, validateCourse, words } from '../content';
 import { evaluate } from '../domain/evaluate';
+import type { FillBlankExercise } from '../domain/types';
 import {
   addDays,
   daysBetween,
@@ -224,5 +225,52 @@ describe('progreso', () => {
     assert.equal(daysBetween('2026-02-28', '2026-03-01'), 1);
     assert.equal(addDays('2026-12-31', 1), '2027-01-01');
     assert.equal(addDays('2026-11-03', 14), '2026-11-17');
+  });
+});
+
+describe('fill-blank', () => {
+  const fb: FillBlankExercise = {
+    id: 'fb1',
+    type: 'fill-blank',
+    difficulty: 1,
+    skill: 'grammar',
+    sentence: { en: 'It ___ a cat', es: 'Es un gato' },
+    answer: 'is',
+    options: ['is', 'are'],
+  };
+
+  it('evaluate ignora mayúsculas y espacios y rechaza otros tipos de respuesta', () => {
+    assert.equal(evaluate(fb, 'is'), true);
+    assert.equal(evaluate(fb, ' IS '), true);
+    assert.equal(evaluate(fb, 'are'), false);
+    assert.equal(evaluate(fb, ['is']), false);
+  });
+
+  it('no alimenta la maestría de palabras', () => {
+    assert.deepEqual(exerciseWordIds(fb), []);
+  });
+
+  const errorsFor = (patch: Partial<FillBlankExercise>) => {
+    const copy = structuredClone(course);
+    copy.units[0].lessons[0].exercises.push({ ...fb, ...patch });
+    return validateCourse(copy, words);
+  };
+
+  it('el ejemplo válido no da errores', () => {
+    assert.deepEqual(errorsFor({}), []);
+  });
+
+  it('valida el hueco, las opciones y la respuesta', () => {
+    const bad: Partial<FillBlankExercise>[] = [
+      { sentence: { en: 'It is a cat', es: 'x' } }, // sin hueco
+      { sentence: { en: 'It ___ ___ cat', es: 'x' } }, // dos huecos
+      { answer: 'am' }, // fuera de las opciones
+      { options: ['is'] }, // menos de 2
+      { options: ['is', 'IS'] }, // duplicadas
+      { options: ['is', 'are', 'am', 'be', 'was'] }, // más de 4
+    ];
+    for (const patch of bad) {
+      assert.ok(errorsFor(patch).some((e) => e.includes('fb1')), JSON.stringify(patch));
+    }
   });
 });
