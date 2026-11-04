@@ -48,6 +48,17 @@ describe('exerciseMachine', () => {
     });
   });
 
+  it('round solo avanza al reintentar (la UI lo usa como key para no remontar el ejercicio al responder)', () => {
+    const actor = start();
+    assert.equal(actor.getSnapshot().context.round, 0);
+    actor.send({ type: 'SUBMIT', answer: 'w_dog' });
+    assert.equal(actor.getSnapshot().context.round, 0);
+    actor.send({ type: 'RETRY' });
+    assert.equal(actor.getSnapshot().context.round, 1);
+    actor.send({ type: 'SUBMIT', answer: 'w_cat' });
+    assert.equal(actor.getSnapshot().context.round, 1);
+  });
+
   it('error: wrong → RETRY → vuelve a intentar; ya no cuenta como primera vez', () => {
     const actor = start();
     actor.send({ type: 'SUBMIT', answer: 'w_dog' });

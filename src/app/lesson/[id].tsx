@@ -100,6 +100,7 @@ function ExerciseRunner({ actorRef }: { actorRef: ActorRefFrom<typeof exerciseMa
   const state = useSelector(actorRef, (s) => s.value as 'answering' | 'correct' | 'wrong' | 'done');
   const exercise = useSelector(actorRef, (s) => s.context.exercise);
   const attempts = useSelector(actorRef, (s) => s.context.attempts);
+  const round = useSelector(actorRef, (s) => s.context.round);
 
   useEffect(() => {
     if (state === 'correct') feedback.correct();
@@ -122,7 +123,7 @@ function ExerciseRunner({ actorRef }: { actorRef: ActorRefFrom<typeof exerciseMa
             <Mascot mood={mood} size={64} />
           </View>
           <ExerciseView
-            key={`${exercise.id}-${attempts}`}
+            key={`${exercise.id}-${round}`}
             exercise={exercise}
             disabled={state !== 'answering'}
             onSubmit={(answer) => actorRef.send({ type: 'SUBMIT', answer })}
