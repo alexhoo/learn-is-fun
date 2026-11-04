@@ -3,5 +3,8 @@
   { "id": "five-lessons", "title": { "en": "Super learner", "es": "Gran aprendiz" }, "emoji": "🚀", "rule": { "kind": "lessonsCompleted", "gte": 5 } },
   { "id": "perfect-lesson", "title": { "en": "Perfect!", "es": "¡Perfecto!" }, "emoji": "💎", "rule": { "kind": "perfectLesson" } },
   { "id": "streak-3", "title": { "en": "3 days in a row", "es": "3 días seguidos" }, "emoji": "🔥", "rule": { "kind": "streak", "gte": 3 } },
-  { "id": "words-10", "title": { "en": "10 words", "es": "10 palabras" }, "emoji": "📚", "rule": { "kind": "wordsMastered", "gte": 10 } }
+  { "id": "words-10", "title": { "en": "10 words", "es": "10 palabras" }, "emoji": "📚", "rule": { "kind": "wordsMastered", "gte": 10 } },
+  { "id": "farm-explorer", "title": { "en": "Farm explorer", "es": "Explorador de la granja" }, "emoji": "🌾", "rule": { "kind": "lessonsCompleted", "gte": 4 } },
+  { "id": "rainbow-explorer", "title": { "en": "Rainbow explorer", "es": "Explorador del arcoíris" }, "emoji": "🌈", "rule": { "kind": "lessonsCompleted", "gte": 8 } },
+  { "id": "space-explorer", "title": { "en": "Space explorer", "es": "Explorador del espacio" }, "emoji": "🚀", "rule": { "kind": "lessonsCompleted", "gte": 12 } }
 ]

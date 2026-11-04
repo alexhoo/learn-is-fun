@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { allLessons, course, exerciseWordIds, findLesson, getWord, grammarWords, validateCourse, validateStageLessons, words } from '../content';
+import { achievements, allLessons, course, exerciseWordIds, findLesson, getWord, grammarWords, validateCourse, validateStageLessons, words } from '../content';
 import wordsJson from '../content/words.json';
 import { evaluate } from '../domain/evaluate';
 import type { Course, Exercise, FillBlankExercise, Lesson, Word } from '../domain/types';
@@ -429,5 +429,27 @@ describe('lecciones de gramática del curso', () => {
 
   it('el curso sigue siendo íntegro', () => {
     assert.deepEqual(validateCourse(), []);
+  });
+});
+
+describe('logros de mundo completado', () => {
+  it('ningún logro de lecciones pide más de las que existen', () => {
+    for (const a of achievements) {
+      if (a.rule.kind === 'lessonsCompleted') assert.ok(a.rule.gte <= allLessons().length, a.id);
+    }
+  });
+
+  it('existen los tres logros de mundo', () => {
+    const ids = achievements.map((a) => a.id);
+    for (const id of ['farm-explorer', 'rainbow-explorer', 'space-explorer']) assert.ok(ids.includes(id), id);
+  });
+
+  it('completar las 12 lecciones en orden da el logro del espacio', () => {
+    const lessons = allLessons();
+    assert.equal(lessons.length, 12);
+    const events = lessons.map((l, i) => lessonEvent(addDays('2026-11-01', i), [result()], l.id));
+    const progress = events.reduce((p, e) => reduceProgress(p, e), emptyProgress());
+    assert.ok(progress.badges.includes('space-explorer'));
+    assert.ok(progress.badges.includes('farm-explorer'));
   });
 });
