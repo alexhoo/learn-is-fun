@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { allLessons, course, exerciseWordIds, validateCourse, validateStageLessons, words } from '../content';
+import { allLessons, course, exerciseWordIds, getWord, grammarWords, validateCourse, validateStageLessons, words } from '../content';
+import wordsJson from '../content/words.json';
 import { evaluate } from '../domain/evaluate';
 import type { Course, Exercise, FillBlankExercise, GrammarWord, Lesson, Word } from '../domain/types';
-import type { Stage } from '../domain/stages';
+import { STAGES, type Stage } from '../domain/stages';
 import {
   addDays,
   daysBetween,
@@ -373,5 +374,27 @@ describe('lecciones de gramática (stage)', () => {
 
   it('el curso real sigue siendo íntegro', () => {
     assert.deepEqual(validateCourse(), []);
+  });
+});
+
+describe('vocabulario', () => {
+  it('ids únicos y textos no vacíos', () => {
+    assert.equal(Object.keys(words).length, wordsJson.length);
+    for (const w of Object.values(words)) assert.ok(w.emoji && w.es && w.en, w.id);
+  });
+
+  it('incluye números y palabras del espacio', () => {
+    assert.equal(getWord('w_six').es, 'seis');
+    assert.equal(getWord('w_alien').category, 'space');
+  });
+
+  it('palabras de gramática: minúsculas, sin duplicados y con etapa válida', () => {
+    const texts = grammarWords.map((g) => g.text);
+    assert.equal(new Set(texts).size, texts.length);
+    for (const g of grammarWords) {
+      assert.equal(g.text, g.text.toLowerCase());
+      assert.ok(STAGES.includes(g.stage), g.text);
+    }
+    assert.ok(grammarWords.some((g) => g.text === 'are' && g.stage === 'G3'));
   });
 });

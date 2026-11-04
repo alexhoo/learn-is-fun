@@ -1,1 +1,13 @@
-[]
+[
+  { "text": "i", "stage": "G1" },
+  { "text": "see", "stage": "G1" },
+  { "text": "a", "stage": "G1" },
+  { "text": "an", "stage": "G1" },
+  { "text": "it", "stage": "G1" },
+  { "text": "is", "stage": "G1" },
+  { "text": "the", "stage": "G2" },
+  { "text": "big", "stage": "G2" },
+  { "text": "small", "stage": "G2" },
+  { "text": "they", "stage": "G3" },
+  { "text": "are", "stage": "G3" }
+]
