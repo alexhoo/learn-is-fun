@@ -10,11 +10,12 @@ Petición típica de Alexis: "añade N lecciones de la etapa X en el mundo Y". E
 
 1. Leer `STAGES.md` (etapa pedida y anteriores), `COMPLEXITY.md` y `themes/<mundo>.md`.
 2. Elegir una estructura nueva por lección y redactar las frases con vocabulario ya introducido.
-3. Añadir en `src/content/words.json` las palabras de contenido que falten (una por línea, mismo formato) y en `src/content/grammarWords.json` las palabras de gramática de la etapa que falten.
+3. Añadir en `src/content/words.json` las palabras de contenido que falten (una por línea, mismo formato) y en `src/content/grammarWords.json` solo las palabras de gramática que usan las frases nuevas y aún no están, con la etapa de la lección.
 4. Escribir las lecciones al final de la unidad del mundo en `src/content/course.json`, con `stage`, ids `<unidad>-NN` y ejercicios `<lección>-e1…`. Una unidad nueva necesita un mundo con colores en `src/theme/index.ts` y su archivo en `themes/`.
-5. Añadir un logro de mundo completado en `src/content/achievements.json` si el mundo es nuevo (`lessonsCompleted` con el total acumulado de lecciones).
-6. Ejecutar `npm test` y `npm run typecheck`. Un error de validación indica contenido mal escrito: corregir el contenido y dejar los validadores como están.
-7. Actualizar la sección de la etapa en `STAGES.md` y el tema en `themes/` con lo añadido.
+5. Logros de mundo en `src/content/achievements.json`: un mundo nuevo lleva el suyo (`lessonsCompleted` con el total acumulado de lecciones hasta el final de ese mundo). Añadir lecciones a un mundo que no es el último desplaza a los mundos siguientes: subir en esa cantidad el `gte` de los logros de mundo posteriores y del propio mundo.
+6. Actualizar los tests de `src/__tests__/domain.test.ts` que fijan el curso (`lecciones con stage, en orden` y `completar las N lecciones`): su lista y su número cambian con cada lección nueva. Ejecutar `npm test` y `npm run typecheck`. Un error de validación indica contenido mal escrito: corregir el contenido y dejar los validadores como están.
+7. Las lecciones insertadas antes de otras ya completadas obligan a quien tenga progreso a jugarlas (el desbloqueo es lineal por orden); preferir añadir al final del curso.
+8. Actualizar la sección de la etapa en `STAGES.md` y el tema en `themes/` con lo añadido.
 
 ## Formato de datos
 

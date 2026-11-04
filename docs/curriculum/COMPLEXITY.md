@@ -24,7 +24,7 @@
 
 Solo las lecciones con `stage` pasan estas reglas; las anteriores a la escalera (`animals-01/02`, `colors-01/02`) están exentas.
 
-- Palabra de contenido: la enseña un ejercicio (`answer` de `pick-image`, `word` de `drag-to-image` o `scramble`, `pairs` de `match`) en una lección anterior o en la misma. Se aceptan sus plurales regulares (`+s`, `+es`). Los distractores y `extraTokens` no la enseñan.
+- Palabra de contenido: la enseña un ejercicio (`answer` de `pick-image`, `word` de `drag-to-image` o `scramble`, `pairs` de `match`) en una lección anterior **del curso** (el orden es el de `course.json`, unidades incluidas) o en la misma, así que un mundo no puede usar vocabulario de un mundo posterior. Se aceptan sus plurales regulares (`+s`, `+es`). Los distractores y `extraTokens` no la enseñan.
 - Palabra de gramática: está en `grammarWords.json` con una etapa igual o anterior a la de la lección.
 - En `fill-blank` se valida la frase con el hueco sustituido por `answer`.
 - Cada lección con `stage` tiene entre 5 y 8 ejercicios.
