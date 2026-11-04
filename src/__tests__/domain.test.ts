@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { allLessons, course, exerciseWordIds, getWord, grammarWords, validateCourse, validateStageLessons, words } from '../content';
+import { allLessons, course, exerciseWordIds, findLesson, getWord, grammarWords, validateCourse, validateStageLessons, words } from '../content';
 import wordsJson from '../content/words.json';
 import { evaluate } from '../domain/evaluate';
-import type { Course, Exercise, FillBlankExercise, GrammarWord, Lesson, Word } from '../domain/types';
+import type { Course, Exercise, FillBlankExercise, Lesson, Word } from '../domain/types';
 import { STAGES, type Stage } from '../domain/stages';
 import {
   addDays,
@@ -278,12 +278,7 @@ describe('fill-blank', () => {
 });
 
 describe('lecciones de gramática (stage)', () => {
-  const grammar: GrammarWord[] = [
-    { text: 'i', stage: 'G1' },
-    { text: 'see', stage: 'G1' },
-    { text: 'a', stage: 'G1' },
-    { text: 'the', stage: 'G2' },
-  ];
+  const grammar = grammarWords;
   const zebra: Word = { id: 'w_zebra', en: 'zebra', es: 'cebra', emoji: '🦓', category: 'animals', level: 1 };
   const vocab = { ...words, w_zebra: zebra };
 
@@ -396,5 +391,43 @@ describe('vocabulario', () => {
       assert.ok(STAGES.includes(g.stage), g.text);
     }
     assert.ok(grammarWords.some((g) => g.text === 'are' && g.stage === 'G3'));
+  });
+});
+
+describe('lecciones de gramática del curso', () => {
+  const graded = allLessons().filter((l) => l.stage);
+
+  it('hay 8 lecciones con stage, en orden', () => {
+    assert.deepEqual(
+      graded.map((l) => [l.id, l.stage]),
+      [
+        ['animals-03', 'G1'],
+        ['animals-04', 'G1'],
+        ['colors-03', 'G2'],
+        ['colors-04', 'G2'],
+        ['space-01', 'G3'],
+        ['space-02', 'G3'],
+        ['space-03', 'G3'],
+        ['space-04', 'G3'],
+      ],
+    );
+    assert.deepEqual(course.units.map((u) => u.id), ['animals', 'colors', 'space']);
+  });
+
+  it('cada una tiene 6 ejercicios de al menos 4 tipos', () => {
+    for (const l of graded) {
+      assert.equal(l.exercises.length, 6, l.id);
+      assert.ok(new Set(l.exercises.map((e) => e.type)).size >= 4, l.id);
+    }
+  });
+
+  it('el jefe espacial usa dificultad creciente y se titula Boss', () => {
+    const boss = findLesson('space-04')?.lesson;
+    assert.ok(boss?.title.en.startsWith('Boss:'));
+    assert.deepEqual(boss?.exercises.map((e) => e.difficulty), [3, 3, 3, 4, 4, 4]);
+  });
+
+  it('el curso sigue siendo íntegro', () => {
+    assert.deepEqual(validateCourse(), []);
   });
 });

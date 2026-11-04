@@ -31,6 +31,32 @@
             { "id": "animals-02-e5", "type": "pick-image", "difficulty": 2, "skill": "listening", "answer": "w_sheep", "distractors": ["w_rabbit", "w_cow", "w_horse"] },
             { "id": "animals-02-e6", "type": "order-words", "difficulty": 2, "skill": "grammar", "sentence": { "en": "The cow is big", "es": "La vaca es grande" }, "extraTokens": ["small"] }
           ]
+        },
+        {
+          "id": "animals-03",
+          "title": { "en": "It is a…", "es": "Es un…" },
+          "stage": "G1",
+          "exercises": [
+            { "id": "animals-03-e1", "type": "pick-image", "difficulty": 1, "skill": "listening", "answer": "w_horse", "distractors": ["w_cow", "w_pig"] },
+            { "id": "animals-03-e2", "type": "match", "difficulty": 1, "skill": "vocab", "pairs": ["w_dog", "w_cat", "w_pig", "w_cow"] },
+            { "id": "animals-03-e3", "type": "fill-blank", "difficulty": 1, "skill": "grammar", "sentence": { "en": "It ___ a cat", "es": "Es un gato" }, "answer": "is", "options": ["is", "are"] },
+            { "id": "animals-03-e4", "type": "order-words", "difficulty": 1, "skill": "grammar", "sentence": { "en": "It is a cat", "es": "Es un gato" } },
+            { "id": "animals-03-e5", "type": "scramble", "difficulty": 2, "skill": "spelling", "word": "w_horse" },
+            { "id": "animals-03-e6", "type": "order-words", "difficulty": 2, "skill": "grammar", "sentence": { "en": "It is a horse", "es": "Es un caballo" }, "extraTokens": ["an"] }
+          ]
+        },
+        {
+          "id": "animals-04",
+          "title": { "en": "A or an?", "es": "¿A o an?" },
+          "stage": "G1",
+          "exercises": [
+            { "id": "animals-04-e1", "type": "pick-image", "difficulty": 1, "skill": "listening", "answer": "w_elephant", "distractors": ["w_cow", "w_pig"] },
+            { "id": "animals-04-e2", "type": "drag-to-image", "difficulty": 1, "skill": "vocab", "word": "w_egg", "targets": ["w_egg", "w_apple", "w_ant"] },
+            { "id": "animals-04-e3", "type": "match", "difficulty": 2, "skill": "vocab", "pairs": ["w_apple", "w_egg", "w_elephant", "w_ant"] },
+            { "id": "animals-04-e4", "type": "fill-blank", "difficulty": 2, "skill": "grammar", "sentence": { "en": "I see ___ apple", "es": "Veo una manzana" }, "answer": "an", "options": ["a", "an"] },
+            { "id": "animals-04-e5", "type": "scramble", "difficulty": 2, "skill": "spelling", "word": "w_apple" },
+            { "id": "animals-04-e6", "type": "order-words", "difficulty": 3, "skill": "grammar", "sentence": { "en": "I see an egg", "es": "Veo un huevo" }, "extraTokens": ["a"] }
+          ]
         }
       ]
     },
@@ -62,6 +88,92 @@
             { "id": "colors-02-e4", "type": "scramble", "difficulty": 2, "skill": "spelling", "word": "w_green" },
             { "id": "colors-02-e5", "type": "scramble", "difficulty": 3, "skill": "spelling", "word": "w_purple", "extraLetters": ["x"] },
             { "id": "colors-02-e6", "type": "order-words", "difficulty": 2, "skill": "grammar", "sentence": { "en": "I like green", "es": "Me gusta el verde" }, "extraTokens": ["red"] }
+          ]
+        },
+        {
+          "id": "colors-03",
+          "title": { "en": "The cat is red", "es": "El gato es rojo" },
+          "stage": "G2",
+          "exercises": [
+            { "id": "colors-03-e1", "type": "pick-image", "difficulty": 1, "skill": "listening", "answer": "w_purple", "distractors": ["w_orange", "w_green"] },
+            { "id": "colors-03-e2", "type": "fill-blank", "difficulty": 1, "skill": "grammar", "sentence": { "en": "The cat is ___", "es": "El gato es rojo" }, "answer": "red", "options": ["red", "blue", "green"] },
+            { "id": "colors-03-e3", "type": "order-words", "difficulty": 1, "skill": "grammar", "sentence": { "en": "The cat is red", "es": "El gato es rojo" } },
+            { "id": "colors-03-e4", "type": "match", "difficulty": 2, "skill": "vocab", "pairs": ["w_red", "w_blue", "w_orange", "w_purple"] },
+            { "id": "colors-03-e5", "type": "drag-to-image", "difficulty": 2, "skill": "vocab", "word": "w_yellow", "targets": ["w_yellow", "w_green", "w_red"] },
+            { "id": "colors-03-e6", "type": "order-words", "difficulty": 2, "skill": "grammar", "sentence": { "en": "The bird is yellow", "es": "El pájaro es amarillo" }, "extraTokens": ["red"] }
+          ]
+        },
+        {
+          "id": "colors-04",
+          "title": { "en": "Big and small", "es": "Grande y pequeño" },
+          "stage": "G2",
+          "exercises": [
+            { "id": "colors-04-e1", "type": "pick-image", "difficulty": 1, "skill": "listening", "answer": "w_elephant", "distractors": ["w_ant", "w_cat"] },
+            { "id": "colors-04-e2", "type": "fill-blank", "difficulty": 1, "skill": "grammar", "sentence": { "en": "The elephant is ___", "es": "El elefante es grande" }, "answer": "big", "options": ["big", "small"] },
+            { "id": "colors-04-e3", "type": "fill-blank", "difficulty": 2, "skill": "grammar", "sentence": { "en": "The ant is ___", "es": "La hormiga es pequeña" }, "answer": "small", "options": ["big", "small"] },
+            { "id": "colors-04-e4", "type": "order-words", "difficulty": 2, "skill": "grammar", "sentence": { "en": "The ant is small", "es": "La hormiga es pequeña" }, "extraTokens": ["big"] },
+            { "id": "colors-04-e5", "type": "scramble", "difficulty": 3, "skill": "spelling", "word": "w_elephant" },
+            { "id": "colors-04-e6", "type": "order-words", "difficulty": 3, "skill": "grammar", "sentence": { "en": "The red cow is big", "es": "La vaca roja es grande" }, "extraTokens": ["small"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "space",
+      "title": { "en": "Space mission", "es": "Misión espacial" },
+      "world": "space",
+      "emoji": "🚀",
+      "lessons": [
+        {
+          "id": "space-01",
+          "title": { "en": "Count to six", "es": "Cuenta hasta seis" },
+          "stage": "G3",
+          "exercises": [
+            { "id": "space-01-e1", "type": "pick-image", "difficulty": 1, "skill": "listening", "answer": "w_two", "distractors": ["w_one", "w_three"] },
+            { "id": "space-01-e2", "type": "match", "difficulty": 1, "skill": "vocab", "pairs": ["w_one", "w_two", "w_three", "w_four"] },
+            { "id": "space-01-e3", "type": "drag-to-image", "difficulty": 1, "skill": "vocab", "word": "w_star", "targets": ["w_star", "w_moon", "w_sun"] },
+            { "id": "space-01-e4", "type": "scramble", "difficulty": 2, "skill": "spelling", "word": "w_moon" },
+            { "id": "space-01-e5", "type": "pick-image", "difficulty": 2, "skill": "listening", "answer": "w_six", "distractors": ["w_four", "w_five"] },
+            { "id": "space-01-e6", "type": "order-words", "difficulty": 2, "skill": "grammar", "sentence": { "en": "I see one star", "es": "Veo una estrella" }, "extraTokens": ["two"] }
+          ]
+        },
+        {
+          "id": "space-02",
+          "title": { "en": "Two stars", "es": "Dos estrellas" },
+          "stage": "G3",
+          "exercises": [
+            { "id": "space-02-e1", "type": "pick-image", "difficulty": 1, "skill": "listening", "answer": "w_rocket", "distractors": ["w_planet", "w_alien"] },
+            { "id": "space-02-e2", "type": "match", "difficulty": 1, "skill": "vocab", "pairs": ["w_rocket", "w_planet", "w_alien", "w_sun"] },
+            { "id": "space-02-e3", "type": "fill-blank", "difficulty": 2, "skill": "grammar", "sentence": { "en": "I see two ___", "es": "Veo dos estrellas" }, "answer": "stars", "options": ["star", "stars"] },
+            { "id": "space-02-e4", "type": "fill-blank", "difficulty": 2, "skill": "grammar", "sentence": { "en": "I see one ___", "es": "Veo una luna" }, "answer": "moon", "options": ["moon", "moons"] },
+            { "id": "space-02-e5", "type": "order-words", "difficulty": 3, "skill": "grammar", "sentence": { "en": "I see two moons", "es": "Veo dos lunas" }, "extraTokens": ["moon"] },
+            { "id": "space-02-e6", "type": "scramble", "difficulty": 3, "skill": "spelling", "word": "w_planet" }
+          ]
+        },
+        {
+          "id": "space-03",
+          "title": { "en": "They are…", "es": "Son…" },
+          "stage": "G3",
+          "exercises": [
+            { "id": "space-03-e1", "type": "pick-image", "difficulty": 1, "skill": "listening", "answer": "w_five", "distractors": ["w_three", "w_six"] },
+            { "id": "space-03-e2", "type": "fill-blank", "difficulty": 2, "skill": "grammar", "sentence": { "en": "They ___ stars", "es": "Son estrellas" }, "answer": "are", "options": ["is", "are"] },
+            { "id": "space-03-e3", "type": "fill-blank", "difficulty": 2, "skill": "grammar", "sentence": { "en": "It ___ a rocket", "es": "Es un cohete" }, "answer": "is", "options": ["is", "are"] },
+            { "id": "space-03-e4", "type": "order-words", "difficulty": 3, "skill": "grammar", "sentence": { "en": "They are three planets", "es": "Son tres planetas" }, "extraTokens": ["is"] },
+            { "id": "space-03-e5", "type": "drag-to-image", "difficulty": 2, "skill": "vocab", "word": "w_alien", "targets": ["w_alien", "w_rocket", "w_planet"] },
+            { "id": "space-03-e6", "type": "order-words", "difficulty": 3, "skill": "grammar", "sentence": { "en": "I see four rockets", "es": "Veo cuatro cohetes" }, "extraTokens": ["a"] }
+          ]
+        },
+        {
+          "id": "space-04",
+          "title": { "en": "Boss: Space mission", "es": "Jefe: Misión espacial" },
+          "stage": "G3",
+          "exercises": [
+            { "id": "space-04-e1", "type": "match", "difficulty": 3, "skill": "vocab", "pairs": ["w_star", "w_moon", "w_rocket", "w_alien"] },
+            { "id": "space-04-e2", "type": "fill-blank", "difficulty": 3, "skill": "grammar", "sentence": { "en": "It ___ an alien", "es": "Es un alienígena" }, "answer": "is", "options": ["is", "are"] },
+            { "id": "space-04-e3", "type": "fill-blank", "difficulty": 3, "skill": "grammar", "sentence": { "en": "I see ___ rocket", "es": "Veo un cohete" }, "answer": "a", "options": ["a", "an"] },
+            { "id": "space-04-e4", "type": "order-words", "difficulty": 4, "skill": "grammar", "sentence": { "en": "The big rocket is red", "es": "El cohete grande es rojo" }, "extraTokens": ["small"] },
+            { "id": "space-04-e5", "type": "order-words", "difficulty": 4, "skill": "grammar", "sentence": { "en": "I see five stars", "es": "Veo cinco estrellas" }, "extraTokens": ["star"] },
+            { "id": "space-04-e6", "type": "scramble", "difficulty": 4, "skill": "spelling", "word": "w_rocket", "extraLetters": ["x"] }
           ]
         }
       ]
