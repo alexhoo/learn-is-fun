@@ -9,11 +9,26 @@
   { "id": "w_duck", "en": "duck", "es": "pato", "emoji": "🦆", "category": "animals", "level": 2 },
   { "id": "w_sheep", "en": "sheep", "es": "oveja", "emoji": "🐑", "category": "animals", "level": 2 },
   { "id": "w_rabbit", "en": "rabbit", "es": "conejo", "emoji": "🐰", "category": "animals", "level": 2 },
-
   { "id": "w_red", "en": "red", "es": "rojo", "emoji": "🔴", "category": "colors", "level": 1 },
   { "id": "w_blue", "en": "blue", "es": "azul", "emoji": "🔵", "category": "colors", "level": 1 },
   { "id": "w_green", "en": "green", "es": "verde", "emoji": "🟢", "category": "colors", "level": 1 },
   { "id": "w_yellow", "en": "yellow", "es": "amarillo", "emoji": "🟡", "category": "colors", "level": 1 },
   { "id": "w_orange", "en": "orange", "es": "naranja", "emoji": "🟠", "category": "colors", "level": 2 },
-  { "id": "w_purple", "en": "purple", "es": "morado", "emoji": "🟣", "category": "colors", "level": 2 }
+  { "id": "w_purple", "en": "purple", "es": "morado", "emoji": "🟣", "category": "colors", "level": 2 },
+  { "id": "w_apple", "en": "apple", "es": "manzana", "emoji": "🍎", "category": "things", "level": 1 },
+  { "id": "w_egg", "en": "egg", "es": "huevo", "emoji": "🥚", "category": "things", "level": 1 },
+  { "id": "w_elephant", "en": "elephant", "es": "elefante", "emoji": "🐘", "category": "animals", "level": 2 },
+  { "id": "w_ant", "en": "ant", "es": "hormiga", "emoji": "🐜", "category": "animals", "level": 2 },
+  { "id": "w_one", "en": "one", "es": "uno", "emoji": "1️⃣", "category": "numbers", "level": 1 },
+  { "id": "w_two", "en": "two", "es": "dos", "emoji": "2️⃣", "category": "numbers", "level": 1 },
+  { "id": "w_three", "en": "three", "es": "tres", "emoji": "3️⃣", "category": "numbers", "level": 1 },
+  { "id": "w_four", "en": "four", "es": "cuatro", "emoji": "4️⃣", "category": "numbers", "level": 1 },
+  { "id": "w_five", "en": "five", "es": "cinco", "emoji": "5️⃣", "category": "numbers", "level": 1 },
+  { "id": "w_six", "en": "six", "es": "seis", "emoji": "6️⃣", "category": "numbers", "level": 1 },
+  { "id": "w_star", "en": "star", "es": "estrella", "emoji": "⭐", "category": "space", "level": 1 },
+  { "id": "w_moon", "en": "moon", "es": "luna", "emoji": "🌙", "category": "space", "level": 1 },
+  { "id": "w_sun", "en": "sun", "es": "sol", "emoji": "☀️", "category": "space", "level": 1 },
+  { "id": "w_rocket", "en": "rocket", "es": "cohete", "emoji": "🚀", "category": "space", "level": 2 },
+  { "id": "w_planet", "en": "planet", "es": "planeta", "emoji": "🪐", "category": "space", "level": 2 },
+  { "id": "w_alien", "en": "alien", "es": "alienígena", "emoji": "👽", "category": "space", "level": 2 }
 ]

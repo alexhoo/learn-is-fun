@@ -13,6 +13,8 @@ export function evaluate(exercise: Exercise, answer: Answer): boolean {
       return answer === exercise.word;
     case 'order-words':
       return Array.isArray(answer) && norm(answer.join(' ')) === norm(exercise.sentence.en);
+    case 'fill-blank':
+      return typeof answer === 'string' && norm(answer) === norm(exercise.answer);
     case 'scramble':
       return Array.isArray(answer) && norm(answer.join('')) === norm(getWord(exercise.word).en);
     case 'match': {

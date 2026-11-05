@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 import type { Exercise, ExerciseType } from '../domain/types';
 import type { ExerciseProps } from './common';
 import { DragToImage } from './DragToImage';
+import { FillBlank } from './FillBlank';
 import { Match } from './Match';
 import { OrderWords } from './OrderWords';
 import { PickImage } from './PickImage';
@@ -20,6 +21,7 @@ export const exerciseComponents: Registry = {
   'order-words': OrderWords,
   match: Match,
   scramble: Scramble,
+  'fill-blank': FillBlank,
 };
 
 export function ExerciseView(props: ExerciseProps<Exercise>) {

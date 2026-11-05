@@ -15,6 +15,8 @@ function correctAnswer(ex: Exercise): Answer {
       return ex.word;
     case 'order-words':
       return ex.sentence.en.split(' ');
+    case 'fill-blank':
+      return ex.answer;
     case 'scramble':
       return getWord(ex.word).en.split('');
     case 'match':
@@ -46,6 +48,17 @@ describe('exerciseMachine', () => {
       attempts: 1,
       misses: 0,
     });
+  });
+
+  it('round solo avanza al reintentar (la UI lo usa como key para no remontar el ejercicio al responder)', () => {
+    const actor = start();
+    assert.equal(actor.getSnapshot().context.round, 0);
+    actor.send({ type: 'SUBMIT', answer: 'w_dog' });
+    assert.equal(actor.getSnapshot().context.round, 0);
+    actor.send({ type: 'RETRY' });
+    assert.equal(actor.getSnapshot().context.round, 1);
+    actor.send({ type: 'SUBMIT', answer: 'w_cat' });
+    assert.equal(actor.getSnapshot().context.round, 1);
   });
 
   it('error: wrong → RETRY → vuelve a intentar; ya no cuenta como primera vez', () => {

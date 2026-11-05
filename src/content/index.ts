@@ -1,6 +1,8 @@
-import type { Course, Exercise, Lesson, Unit, Word } from '../domain/types';
+import { STAGES, stageRank, type Stage } from '../domain/stages';
+import type { Course, Exercise, GrammarWord, Lesson, Unit, Word } from '../domain/types';
 import achievementsJson from './achievements.json';
 import courseJson from './course.json';
+import grammarWordsJson from './grammarWords.json';
 import wordsJson from './words.json';
 
 export type AchievementRule =
@@ -18,6 +20,7 @@ export type Achievement = {
 
 export const course = courseJson as unknown as Course;
 export const achievements = achievementsJson as unknown as Achievement[];
+export const grammarWords = grammarWordsJson as unknown as GrammarWord[];
 
 export const words: Record<string, Word> = Object.fromEntries(
   (wordsJson as Word[]).map((w) => [w.id, w]),
@@ -52,8 +55,62 @@ export function exerciseWordIds(exercise: Exercise): string[] {
     case 'match':
       return [...exercise.pairs];
     case 'order-words':
+    case 'fill-blank':
       return [];
   }
+}
+
+const MIN_STAGE_EXERCISES = 5;
+const MAX_STAGE_EXERCISES = 8;
+
+/** Palabras sueltas de una frase, en minúsculas y sin puntuación. */
+function sentenceTokens(en: string): string[] {
+  return en
+    .toLowerCase()
+    .replace(/[.,!?]/g, '')
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+/**
+ * Reglas de las lecciones con `stage`: tamaño y vocabulario de las frases.
+ * Una palabra de contenido está "introducida" si una lección anterior (o la misma) la enseña;
+ * una palabra de gramática, si su etapa no es posterior a la de la lección.
+ */
+export function validateStageLessons(c: Course, vocabulary: Record<string, Word>, grammar: GrammarWord[]): string[] {
+  const errors: string[] = [];
+  const taught = new Set<string>(); // ids enseñados hasta ahora, en el orden del curso
+  const enOf = (id: string) => vocabulary[id]?.en.toLowerCase();
+
+  for (const lesson of allLessons(c)) {
+    lesson.exercises.forEach((ex) => exerciseWordIds(ex).forEach((id) => taught.add(id)));
+    const stage = lesson.stage;
+    if (stage === undefined) continue;
+    if (!STAGES.includes(stage)) {
+      errors.push(`${lesson.id}: etapa desconocida "${stage}"`);
+      continue;
+    }
+    const size = lesson.exercises.length;
+    if (size < MIN_STAGE_EXERCISES || size > MAX_STAGE_EXERCISES) {
+      errors.push(`${lesson.id}: una lección de gramática tiene entre ${MIN_STAGE_EXERCISES} y ${MAX_STAGE_EXERCISES} ejercicios (hay ${size})`);
+    }
+    const known = new Set<string>();
+    for (const id of taught) {
+      const en = enOf(id);
+      if (en) [en, `${en}s`, `${en}es`].forEach((form) => known.add(form));
+    }
+    for (const g of grammar) if (stageRank(g.stage) <= stageRank(stage as Stage)) known.add(g.text.toLowerCase());
+
+    for (const ex of lesson.exercises) {
+      const sentence =
+        ex.type === 'order-words' ? ex.sentence.en : ex.type === 'fill-blank' ? ex.sentence.en.replace('___', ex.answer) : null;
+      if (sentence === null) continue;
+      for (const token of sentenceTokens(sentence)) {
+        if (!known.has(token)) errors.push(`${ex.id}: "${token}" aún no se ha introducido en la etapa ${stage}`);
+      }
+    }
+  }
+  return errors;
 }
 
 /** Comprueba la integridad del contenido. Devuelve la lista de errores (vacía si todo está bien). */
@@ -61,8 +118,9 @@ export function validateCourse(
   c: Course = course,
   vocabulary: Record<string, Word> = words,
   achievementList: Achievement[] = achievements,
+  grammar: GrammarWord[] = grammarWords,
 ): string[] {
-  const errors: string[] = [];
+  const errors: string[] = validateStageLessons(c, vocabulary, grammar);
   const seen = new Set<string>();
   const check = (where: string, wordId: string) => {
     if (!vocabulary[wordId]) errors.push(`${where}: palabra inexistente "${wordId}"`);
@@ -94,6 +152,15 @@ export function validateCourse(
           case 'scramble':
             check(ex.id, ex.word);
             break;
+          case 'fill-blank': {
+            const blanks = ex.sentence.en.split('___').length - 1;
+            if (blanks !== 1) errors.push(`${ex.id}: la frase debe tener exactamente un hueco (___)`);
+            const options = ex.options.map((o) => o.trim().toLowerCase());
+            if (!options.includes(ex.answer.trim().toLowerCase())) errors.push(`${ex.id}: la respuesta no está entre las opciones`);
+            if (options.length < 2 || options.length > 4) errors.push(`${ex.id}: se necesitan entre 2 y 4 opciones`);
+            if (new Set(options).size !== options.length) errors.push(`${ex.id}: opciones duplicadas`);
+            break;
+          }
           case 'order-words':
             if (ex.sentence.en.trim().split(/\s+/).length < 2) errors.push(`${ex.id}: la frase es demasiado corta`);
             break;

@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { allLessons, course, validateCourse, words } from '../content';
+import { achievements, allLessons, course, exerciseWordIds, findLesson, getWord, grammarWords, validateCourse, validateStageLessons, words } from '../content';
+import wordsJson from '../content/words.json';
 import { evaluate } from '../domain/evaluate';
+import type { Course, Exercise, FillBlankExercise, Lesson, Word } from '../domain/types';
+import { STAGES, type Stage } from '../domain/stages';
 import {
   addDays,
   daysBetween,
@@ -220,9 +223,241 @@ describe('progreso', () => {
     assert.equal(isLessonUnlocked(p, lessons[2].id), false);
   });
 
+  it('una lección ya completada sigue desbloqueada aunque se inserten lecciones antes', () => {
+    const lessons = allLessons();
+    // Progreso de antes: la lección 4 tiene estrellas, pero la 3 (insertada después) no.
+    const p = reduceProgress(emptyProgress(), lessonEvent('2026-11-03', [result()], lessons[3].id));
+    assert.equal(isLessonUnlocked(p, lessons[2].id), false);
+    assert.equal(isLessonUnlocked(p, lessons[3].id), true);
+  });
+
   it('utilidades de fechas', () => {
     assert.equal(daysBetween('2026-02-28', '2026-03-01'), 1);
     assert.equal(addDays('2026-12-31', 1), '2027-01-01');
     assert.equal(addDays('2026-11-03', 14), '2026-11-17');
+  });
+});
+
+describe('fill-blank', () => {
+  const fb: FillBlankExercise = {
+    id: 'fb1',
+    type: 'fill-blank',
+    difficulty: 1,
+    skill: 'grammar',
+    sentence: { en: 'It ___ a cat', es: 'Es un gato' },
+    answer: 'is',
+    options: ['is', 'are'],
+  };
+
+  it('evaluate ignora mayúsculas y espacios y rechaza otros tipos de respuesta', () => {
+    assert.equal(evaluate(fb, 'is'), true);
+    assert.equal(evaluate(fb, ' IS '), true);
+    assert.equal(evaluate(fb, 'are'), false);
+    assert.equal(evaluate(fb, ['is']), false);
+  });
+
+  it('no alimenta la maestría de palabras', () => {
+    assert.deepEqual(exerciseWordIds(fb), []);
+  });
+
+  const errorsFor = (patch: Partial<FillBlankExercise>) => {
+    const copy = structuredClone(course);
+    copy.units[0].lessons[0].exercises.push({ ...fb, ...patch });
+    return validateCourse(copy, words);
+  };
+
+  it('el ejemplo válido no da errores', () => {
+    assert.deepEqual(errorsFor({}), []);
+  });
+
+  it('valida el hueco, las opciones y la respuesta', () => {
+    const bad: Partial<FillBlankExercise>[] = [
+      { sentence: { en: 'It is a cat', es: 'x' } }, // sin hueco
+      { sentence: { en: 'It ___ ___ cat', es: 'x' } }, // dos huecos
+      { answer: 'am' }, // fuera de las opciones
+      { options: ['is'] }, // menos de 2
+      { options: ['is', 'IS'] }, // duplicadas
+      { options: ['is', 'are', 'am', 'be', 'was'] }, // más de 4
+    ];
+    for (const patch of bad) {
+      assert.ok(errorsFor(patch).some((e) => e.includes('fb1')), JSON.stringify(patch));
+    }
+  });
+});
+
+describe('lecciones de gramática (stage)', () => {
+  const grammar = grammarWords;
+  const zebra: Word = { id: 'w_zebra', en: 'zebra', es: 'cebra', emoji: '🦓', category: 'animals', level: 1 };
+  const vocab = { ...words, w_zebra: zebra };
+
+  const filler = (n: number): Exercise[] =>
+    Array.from({ length: n }, (_, i) => ({
+      id: `filler-${i}`,
+      type: 'pick-image' as const,
+      difficulty: 1 as const,
+      skill: 'listening' as const,
+      answer: 'w_cat',
+      distractors: ['w_dog'],
+    }));
+  const order = (en: string): Exercise => ({
+    id: `order-${en}`,
+    type: 'order-words',
+    difficulty: 1,
+    skill: 'grammar',
+    sentence: { en, es: 'x' },
+  });
+  const lesson = (id: string, stage: Stage | undefined, exercises: Exercise[]): Lesson => ({
+    id,
+    title: { en: id, es: id },
+    exercises,
+    ...(stage ? { stage } : {}),
+  });
+  /** Curso real con lecciones extra al final de la última unidad. */
+  const withLessons = (...extra: Lesson[]): Course => {
+    const copy = structuredClone(course);
+    copy.units[copy.units.length - 1].lessons.push(...extra);
+    return copy;
+  };
+  const check = (...extra: Lesson[]) => validateStageLessons(withLessons(...extra), vocab, grammar);
+
+  it('stage desconocido da error con el id de la lección', () => {
+    const errors = check(lesson('x1', 'G9' as Stage, [...filler(4), order('I see a cat')]));
+    assert.ok(errors.some((e) => e.includes('x1')));
+  });
+
+  it('exige entre 5 y 8 ejercicios', () => {
+    assert.ok(check(lesson('x1', 'G1', filler(4))).some((e) => e.includes('x1')));
+    assert.ok(check(lesson('x1', 'G1', filler(9))).some((e) => e.includes('x1')));
+    assert.deepEqual(check(lesson('x1', 'G1', filler(5))), []);
+    assert.deepEqual(check(lesson('x1', 'G1', filler(8))), []);
+  });
+
+  it('una palabra desconocida en una frase da error con el token', () => {
+    const errors = check(lesson('x1', 'G1', [...filler(4), order('I see a unicorn')]));
+    assert.ok(errors.some((e) => e.includes('unicorn')));
+  });
+
+  it('ignora puntuación y mayúsculas, y acepta plurales regulares', () => {
+    assert.deepEqual(check(lesson('x1', 'G1', [...filler(3), order('I see a cat.'), order('i SEE a Cat')])), []);
+    assert.deepEqual(check(lesson('x1', 'G1', [...filler(4), order('I see cats')])), []);
+  });
+
+  it('las palabras de gramática no pueden ser de una etapa posterior', () => {
+    const exs = [...filler(4), order('The cat')];
+    assert.ok(check(lesson('x1', 'G1', exs)).some((e) => e.includes('the')));
+    assert.deepEqual(check(lesson('x1', 'G2', exs)), []);
+  });
+
+  it('una palabra enseñada en la misma lección vale; en una lección posterior, no', () => {
+    const teach: Exercise = { id: 'teach', type: 'pick-image', difficulty: 1, skill: 'listening', answer: 'w_zebra', distractors: ['w_cat'] };
+    const same = lesson('x1', 'G1', [...filler(3), teach, order('I see a zebra')]);
+    assert.deepEqual(check(same), []);
+    const early = lesson('x1', 'G1', [...filler(4), order('I see a zebra')]);
+    const later = lesson('x2', 'G1', [...filler(4), { ...teach, id: 'teach2' }]);
+    assert.ok(check(early, later).some((e) => e.includes('zebra')));
+  });
+
+  it('fill-blank sustituye el hueco por la respuesta antes de validar', () => {
+    const fb = (answer: string): Exercise => ({
+      id: 'fb',
+      type: 'fill-blank',
+      difficulty: 1,
+      skill: 'grammar',
+      sentence: { en: 'I see ___ cat', es: 'x' },
+      answer,
+      options: [answer, 'b'],
+    });
+    assert.deepEqual(check(lesson('x1', 'G1', [...filler(4), fb('a')])), []);
+    assert.ok(check(lesson('x1', 'G1', [...filler(4), fb('zzz')])).some((e) => e.includes('zzz')));
+  });
+
+  it('las lecciones sin stage están exentas', () => {
+    assert.deepEqual(check(lesson('x1', undefined, [order('I see a unicorn')])), []);
+  });
+
+  it('el curso real sigue siendo íntegro', () => {
+    assert.deepEqual(validateCourse(), []);
+  });
+});
+
+describe('vocabulario', () => {
+  it('ids únicos y textos no vacíos', () => {
+    assert.equal(Object.keys(words).length, wordsJson.length);
+    for (const w of Object.values(words)) assert.ok(w.emoji && w.es && w.en, w.id);
+  });
+
+  it('incluye números y palabras del espacio', () => {
+    assert.equal(getWord('w_six').es, 'seis');
+    assert.equal(getWord('w_alien').category, 'space');
+  });
+
+  it('palabras de gramática: minúsculas, sin duplicados y con etapa válida', () => {
+    const texts = grammarWords.map((g) => g.text);
+    assert.equal(new Set(texts).size, texts.length);
+    for (const g of grammarWords) {
+      assert.equal(g.text, g.text.toLowerCase());
+      assert.ok(STAGES.includes(g.stage), g.text);
+    }
+    assert.ok(grammarWords.some((g) => g.text === 'are' && g.stage === 'G3'));
+  });
+});
+
+describe('lecciones de gramática del curso', () => {
+  const graded = allLessons().filter((l) => l.stage);
+
+  it('hay 8 lecciones con stage, en orden', () => {
+    assert.deepEqual(
+      graded.map((l) => [l.id, l.stage]),
+      [
+        ['animals-03', 'G1'],
+        ['animals-04', 'G1'],
+        ['colors-03', 'G2'],
+        ['colors-04', 'G2'],
+        ['space-01', 'G3'],
+        ['space-02', 'G3'],
+        ['space-03', 'G3'],
+        ['space-04', 'G3'],
+      ],
+    );
+    assert.deepEqual(course.units.map((u) => u.id), ['animals', 'colors', 'space']);
+  });
+
+  it('cada una tiene 6 ejercicios de al menos 4 tipos', () => {
+    for (const l of graded) {
+      assert.equal(l.exercises.length, 6, l.id);
+      assert.ok(new Set(l.exercises.map((e) => e.type)).size >= 4, l.id);
+    }
+  });
+
+  it('el jefe espacial usa dificultad creciente y se titula Boss', () => {
+    const boss = findLesson('space-04')?.lesson;
+    assert.ok(boss?.title.en.startsWith('Boss:'));
+    assert.deepEqual(boss?.exercises.map((e) => e.difficulty), [3, 3, 3, 4, 4, 4]);
+  });
+
+  it('el curso sigue siendo íntegro', () => {
+    assert.deepEqual(validateCourse(), []);
+  });
+});
+
+describe('logros de mundo completado', () => {
+  it('ningún logro de lecciones pide más de las que existen', () => {
+    for (const a of achievements) {
+      if (a.rule.kind === 'lessonsCompleted') assert.ok(a.rule.gte <= allLessons().length, a.id);
+    }
+  });
+
+  it('existen los tres logros de mundo', () => {
+    const ids = achievements.map((a) => a.id);
+    for (const id of ['farm-explorer', 'rainbow-explorer', 'space-explorer']) assert.ok(ids.includes(id), id);
+  });
+
+  it('completar las 12 lecciones en orden da el logro del espacio', () => {
+    const lessons = allLessons();
+    assert.equal(lessons.length, 12);
+    const events = lessons.map((l, i) => lessonEvent(addDays('2026-11-01', i), [result()], l.id));
+    const progress = events.reduce((p, e) => reduceProgress(p, e), emptyProgress());
+    assert.ok(progress.badges.includes('space-explorer'));
+    assert.ok(progress.badges.includes('farm-explorer'));
   });
 });

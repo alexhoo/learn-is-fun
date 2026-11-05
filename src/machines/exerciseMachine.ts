@@ -9,6 +9,8 @@ type Context = {
   exercise: Exercise;
   attempts: number;
   misses: number;
+  /** Sube solo al reintentar: la UI lo usa como key para reiniciar el ejercicio sin remontarlo al responder. */
+  round: number;
 };
 
 export type ExerciseEvent =
@@ -36,10 +38,11 @@ export const exerciseMachine = setup({
   actions: {
     countAttempt: assign({ attempts: ({ context }) => context.attempts + 1 }),
     countMiss: assign({ misses: ({ context }) => context.misses + 1 }),
+    nextRound: assign({ round: ({ context }) => context.round + 1 }),
   },
 }).createMachine({
   id: 'exercise',
-  context: ({ input }) => ({ exercise: input.exercise, attempts: 0, misses: 0 }),
+  context: ({ input }) => ({ exercise: input.exercise, attempts: 0, misses: 0, round: 0 }),
   initial: 'answering',
   states: {
     answering: {
@@ -52,7 +55,7 @@ export const exerciseMachine = setup({
       },
     },
     correct: { on: { CONTINUE: 'done' } },
-    wrong: { on: { RETRY: 'answering' } },
+    wrong: { on: { RETRY: { target: 'answering', actions: 'nextRound' } } },
     done: { type: 'final' },
   },
   output: ({ context }) => ({

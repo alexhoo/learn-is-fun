@@ -1,5 +1,10 @@
+import type { Stage } from './stages';
+
 // Modelo de dominio. Todo el contenido (palabras, lecciones, ejercicios) son datos:
 // los ejercicios referencian palabras por id y nunca incrustan texto de vocabulario.
+
+/** Palabra funcional o básica que no es un sustantivo ilustrable (artículos, verbos, adjetivos…). */
+export type GrammarWord = { text: string; stage: Stage };
 
 export type Level = 1 | 2 | 3 | 4 | 5;
 
@@ -60,12 +65,21 @@ export type ScrambleExercise = ExerciseBase & {
   extraLetters?: string[];
 };
 
+/** Se elige la palabra que completa el hueco (`___`) de una frase. */
+export type FillBlankExercise = ExerciseBase & {
+  type: 'fill-blank';
+  sentence: { en: string; es: string }; // `en` lleva `___` exactamente una vez
+  answer: string;
+  options: string[]; // texto, no ids de palabra; incluye `answer`
+};
+
 export type Exercise =
   | PickImageExercise
   | DragToImageExercise
   | OrderWordsExercise
   | MatchExercise
-  | ScrambleExercise;
+  | ScrambleExercise
+  | FillBlankExercise;
 
 export type ExerciseType = Exercise['type'];
 
@@ -79,6 +93,8 @@ export type Answer = string | string[];
 export type Lesson = {
   id: string;
   title: { en: string; es: string };
+  /** Etapa de gramática. Solo las lecciones con `stage` pasan las reglas de vocabulario de la escalera. */
+  stage?: Stage;
   exercises: Exercise[];
 };
 
